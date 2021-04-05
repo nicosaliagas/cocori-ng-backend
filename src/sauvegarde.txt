@@ -1,0 +1,99 @@
+import { Service } from 'typedi';
+
+import Logger from '../loaders/logger';
+
+const { spawn } = require("child_process");
+
+
+@Service()
+export default class ProjetService {
+    fs = require('fs');
+    distDirectory = './dist';
+    projectName = 'my-project';
+    projectDirectory = `${this.distDirectory}/${this.projectName}`;
+
+    constructor() { }
+
+    public GénérationProjet() {
+        Logger.info(`GénérationProjet`);
+
+        this.créerDossierDestinationEtLancerGénération();
+    }
+
+    private créerDossierDestinationEtLancerGénération() {
+        this.fs.rmdirSync(this.distDirectory, { recursive: true });
+
+        this.fs.mkdir(this.distDirectory, () => {
+            this.créerProjetAngular();
+        });
+    }
+
+    private créerProjetAngular() {
+        var process = require('process');
+
+        process.chdir(this.distDirectory);
+
+        Logger.info("[START] Création du projet Angular");
+
+        this.exécuteCommande(`new ${this.projectName} --skipInstall=true --routing=true --style=scss`)
+            .then(
+                () => {
+                    Logger.info("[END] Création du projet Angular");
+
+                    var process = require('process');
+
+                    process.chdir(`./${this.projectName}`);
+
+                    Logger.info("[START] Le schéma est en cours d'installation.");
+
+                    this.exécuteCommande("i --save ..\\..\\lib\\my-component-0.0.4.tgz", "npm").then(
+                        () => {
+                            Logger.info("[END] Le schéma est en cours d'installation.");
+
+                            Logger.info("[START] Mise à jour template app.component");
+
+                            this.exécuteCommande('g my-component:my-component --name="Ma superbe application 2"').then(() => {
+                                Logger.info("[END] Mise à jour template app.component.");
+
+                                Logger.info("[START] Création page authentification.");
+
+                                this.exécuteCommande('g my-component:page-component --name=authentification').then(() => {
+                                    Logger.info("[END] Création page authentification.");
+
+                                    Logger.info("[END] Création du projet Angular");
+                                });
+                            });
+                        });
+                });
+    }
+
+    private async exécuteCommande(params: string, commande: string = "ng.cmd") {
+        const child = await spawn(commande, [
+            params
+        ], { shell: true });
+
+        for await (const data of child.stdout) {
+            Logger.info(data);
+        };
+
+        for await (const data of child.stderr) {
+            Logger.error(data);
+        };
+
+        // child.stdout.on('data', function (data) {
+        //     Logger.info(data);
+        // });
+
+        // child.stderr.on('data', function (data) {
+        //     Logger.error(data);
+        // });
+
+        // child.on('error', (error) => {
+        //     console.log(`error: ${error.message}`);
+        // });
+
+        // child.on("close", code => {
+        //     console.log("close");
+        // });
+    }
+}
