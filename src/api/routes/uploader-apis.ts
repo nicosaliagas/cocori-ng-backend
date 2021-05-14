@@ -13,7 +13,7 @@ const fs = require('fs');
 const route = Router();
 
 export default (app: Router) => {
-  app.use('/', route);
+  app.use('/upload', route);
 
   route.get(
     '/hello-world',

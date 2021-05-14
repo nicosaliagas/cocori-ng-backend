@@ -4,9 +4,9 @@
 
 ### Scripts
 
-#### `npm run start:dev`
+#### `npm run api`
 
-Starts the application in development using `nodemon` and `ts-node` to do hot reloading.
+Lance le serveur et se mets en écoute
 
 #### `npm run build`
 
