@@ -11,6 +11,7 @@ const path = require('path');
 const fs = require('fs');
 
 const route = Router();
+const tmp: string = 'tmp'
 
 export default (app: Router) => {
   app.use('/upload', route);
@@ -37,7 +38,7 @@ export default (app: Router) => {
         const partIndex: number = req.body.partIndex || 0;
         let fileId: any = req.body.fileId;
         let pathFolderPart: string = '';
-        let pathFolderPublic: string = `${__dirname}/../../public`;
+        let pathFolderPublic: string = `${__dirname}/../../public/${tmp}/`;
 
         const uploaderService = Container.get(UploaderService);
 
@@ -56,7 +57,7 @@ export default (app: Router) => {
         if (numberParts > 1 || partIndex > 0) {
           path = `${pathFolderPart}/${uploaderService.pad(partIndex)}.part`
         } else {
-          path = __dirname + '/../../public/' + fileId + '.png'
+          path = __dirname + `/../../public/${tmp}/` + fileId + '.png'
         }
 
         const base64Data = base64Content.replace(/^data:([A-Za-z-+/]+);base64,/, '');
@@ -80,7 +81,7 @@ export default (app: Router) => {
         let fileId: any = req.body.fileId;
 
         let pathFolderPart: string = '';
-        let pathFolderPublic: string = `${__dirname}/../../public`;
+        let pathFolderPublic: string = `${__dirname}/../../public/${tmp}`;
 
         const uploaderService = Container.get(UploaderService);
 
@@ -124,6 +125,27 @@ export default (app: Router) => {
   );
 
   route.get(
+    '/image/:filename',
+    async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        const download = req.query.download;
+        const fileName = req.params.filename;
+
+        const pathFile = __dirname + `/../../public/images/` + fileName
+
+        if (download === 'true') {
+          return res.download(pathFile);
+        } else {
+          return res.sendFile(path.resolve(pathFile));
+        }
+
+      } catch (e) {
+        return next(e);
+      }
+    },
+  );
+
+  route.get(
     '/file/:id',
     async (req: Request, res: Response, next: NextFunction) => {
       try {
@@ -132,7 +154,7 @@ export default (app: Router) => {
 
         Logger.debug(`downloading the file... ${fileId}`);
 
-        const pathFile = __dirname + '/../../public/' + fileId + '.png'
+        const pathFile = __dirname + `/../../public/${tmp}/` + fileId + '.png'
 
         if (download === 'true') {
           return res.download(pathFile);
