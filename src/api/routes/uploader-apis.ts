@@ -65,7 +65,7 @@ export default (app: Router) => {
         fs.writeFileSync(path, base64Data, { encoding: 'base64' });
 
         return res.status(201).json(fileId);
-        //return res.status(500).json(fileId);
+        // return res.status(500).json(fileId);
       } catch (e) {
         return next(e);
       }
