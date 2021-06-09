@@ -24,7 +24,7 @@ export default ({ app }: { app: express.Application }) => {
     // The magic package that prevents frontend developers going nuts
     // Alternate description:
     // Enable Cross Origin Resource Sharing to all origins by default
-    app.use(cors());
+    app.use(cors({credentials: true, origin: ['https://localhost:2021', 'http://localhost:4200']}));
 
     // Some sauce that always add since 2014
     // "Lets you use HTTP verbs such as PUT or DELETE in places where the client doesn't support it."
@@ -32,9 +32,9 @@ export default ({ app }: { app: express.Application }) => {
     app.use(require('method-override')());
 
     // Middleware that transforms the raw string of req.body into json
-    
-    app.use(express.json({limit: '200mb'})); //Used to parse JSON bodies
-    
+
+    app.use(express.json({ limit: '200mb' })); //Used to parse JSON bodies
+
     app.use(express.urlencoded({ limit: '200mb', extended: true }))
 
     // Load API routes

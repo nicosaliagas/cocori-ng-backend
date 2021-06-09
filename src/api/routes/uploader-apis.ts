@@ -20,7 +20,7 @@ export default (app: Router) => {
     '/hello-world',
     async (req: Request, res: Response, next: NextFunction) => {
       try {
-        return res.status(201).json({ message: "hello world" });
+        return res.status(201).json({ message: "hello world upload" });
       } catch (e) {
         return next(e);
       }
