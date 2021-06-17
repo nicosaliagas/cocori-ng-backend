@@ -40,11 +40,27 @@ export default (app: Router) => {
     },
   );
 
+  route.get(
+    '/menu-odata',
+    async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        const pathFileDraws = __dirname + '/../../public/ressources/boulle-bo/menu.json'
+
+        const rawdata: any[] = JSON.parse(fs.readFileSync(pathFileDraws));
+
+        return res.status(201).json({ __count: rawdata.length, results: rawdata });
+
+      } catch (e) {
+        return next(e);
+      }
+    },
+  );
+
   route.post(
     '/menu',
     async (req: Request, res: Response, next: NextFunction) => {
       try {
-        const {nom, url} = req.body
+        const { nom, url } = req.body
         let menuEntries: any[] = []
 
         Logger.debug(`ajout d'une nouvelle entrée de menu...`);
@@ -59,9 +75,9 @@ export default (app: Router) => {
           menuEntries = JSON.parse(datas);
         }
 
-        menuEntries.push({label: nom, linkTo: url})
+        menuEntries.push({ label: nom, linkTo: url })
 
-        fs.writeFileSync(pathFile,  JSON.stringify(menuEntries));
+        fs.writeFileSync(pathFile, JSON.stringify(menuEntries));
 
         let rawdata = fs.readFileSync(pathFile);
 
