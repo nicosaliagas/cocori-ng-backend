@@ -1,1 +1,22 @@
-[{"label":"Entrée Racine","linkTo":"/racine"},{"label":"Ferrari","linkTo":"/jpo/ferrari"},{"label":"Dynamic","linkTo":"/jpo/dynamic"},{"label":"Menu cool","linkTo":"/jpo/test"},{"label":"supercool","linkTo":"/testC"}]
+[
+    {
+        "id": "627F5CFE-77E1-461C-A600-2643249A987E",
+        "label": "Entrée Racine",
+        "linkTo": "/racine"
+    },
+    {
+        "id": "71401FEF-A05B-4FF0-8361-C131E430C42C",
+        "label": "Ferrari",
+        "linkTo": "/jpo/ferrari"
+    },
+    {
+        "id": "D592930E-5766-4A31-9643-810BE1A0DEAD",
+        "label": "Supercar",
+        "linkTo": "/jpo/supercar"
+    },
+    {
+        "id": "9051926a-053c-1d41-0410-6ee9514e7909",
+        "label": "SuperMenu",
+        "linkTo": "/jpo/supermenu"
+    }
+]

@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response, Router } from 'express';
+import { Container } from 'typedi';
 
 import Logger from '../../loaders/logger';
+import HelperService from '../../services/helper.service';
 
 const rimraf = require("rimraf");
 const fsPromises = require('fs').promises;
@@ -75,7 +77,10 @@ export default (app: Router) => {
           menuEntries = JSON.parse(datas);
         }
 
-        menuEntries.push({ label: nom, linkTo: url })
+        const helperServiceInstance = Container.get(HelperService);
+
+        /** génératio, d'un id pour le menu créé */
+        menuEntries.push({ id: helperServiceInstance.generateGuid(), label: nom, linkTo: url })
 
         fs.writeFileSync(pathFile, JSON.stringify(menuEntries));
 
