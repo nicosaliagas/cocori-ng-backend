@@ -27,6 +27,27 @@ export default (app: Router) => {
   );
 
   route.get(
+    '/getmenu/:id',
+    async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        const id = req.params.id;
+
+        let pathFile = __dirname + '/../../public/ressources/boulle-bo/menu.json'
+
+        let rawdata = fs.readFileSync(pathFile);
+
+        const datas: any[] = JSON.parse(rawdata)
+
+        const menu = datas.find((menu: any) => menu.id === id)
+
+        return res.status(201).json(menu);
+      } catch (e) {
+        return next(e);
+      }
+    },
+  );
+
+  route.get(
     '/menu',
     async (req: Request, res: Response, next: NextFunction) => {
       try {
@@ -62,7 +83,7 @@ export default (app: Router) => {
     '/menu',
     async (req: Request, res: Response, next: NextFunction) => {
       try {
-        const { nom, url } = req.body
+        const { label, linkTo } = req.body
         let menuEntries: any[] = []
 
         Logger.debug(`ajout d'une nouvelle entrée de menu...`);
@@ -79,14 +100,76 @@ export default (app: Router) => {
 
         const helperServiceInstance = Container.get(HelperService);
 
-        /** génératio, d'un id pour le menu créé */
-        menuEntries.push({ id: helperServiceInstance.generateGuid(), label: nom, linkTo: url })
+        /** génération, d'un id pour le menu créé */
+        menuEntries.push({ id: helperServiceInstance.generateGuid(), label: label, linkTo: linkTo })
 
         fs.writeFileSync(pathFile, JSON.stringify(menuEntries));
 
         let rawdata = fs.readFileSync(pathFile);
 
         return res.status(201).json(JSON.parse(rawdata));
+
+      } catch (e) {
+        return next(e);
+      }
+    },
+  );
+
+  route.post(
+    '/updatemenu/:id',
+    async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        const { label, linkTo } = req.body
+        const id = req.params.id;
+
+        let pathFile = __dirname + '/../../public/ressources/boulle-bo/menu.json'
+
+        Logger.debug(`édition d'une nouvelle entrée de menu...`);
+
+        let rawdata = fs.readFileSync(pathFile);
+
+        const datas: any[] = JSON.parse(rawdata)
+
+        const menuToUpdate = datas.find((menu: any) => menu.id === id)
+
+        menuToUpdate.label = label
+        menuToUpdate.linkTo = linkTo
+
+        fs.writeFileSync(pathFile, JSON.stringify(datas));
+
+        return res.status(201).json(true);
+
+      } catch (e) {
+        return next(e);
+      }
+    },
+  );
+
+  route.post(
+    '/deletemenus',
+    async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        const idsMenus: string[] = req.body
+
+        let pathFile = __dirname + '/../../public/ressources/boulle-bo/menu.json'
+
+        Logger.debug(`suppression des nouvelles entrées de menu...`);
+
+        let rawdata = fs.readFileSync(pathFile);
+
+        const datas: any[] = JSON.parse(rawdata)
+
+        idsMenus.forEach((idMenu: string) => {
+          const indexToDelete: number = datas.findIndex((menuDatabase: any) => menuDatabase.id === idMenu)
+
+          if (indexToDelete !== -1) {
+            datas.splice(indexToDelete, 1)
+          }
+        })
+
+        fs.writeFileSync(pathFile, JSON.stringify(datas));
+
+        return res.status(201).json(true);
 
       } catch (e) {
         return next(e);

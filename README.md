@@ -19,9 +19,5 @@ Starts the app in production by first building the project with `npm run build`,
 ### Rimraf
 npm install --save rimraf
 
-### Cypress
-
-npm install cypress --save-dev
-
-> run : npx cypress open
-> record tests e2e : npx cypress run --record --key 84330dcb-1088-4e89-bfc4-72d1c3f63c13
+### API URL : 
+https://localhost:8080/api/boulle-bo/hello-world
