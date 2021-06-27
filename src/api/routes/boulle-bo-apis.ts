@@ -26,6 +26,8 @@ export default (app: Router) => {
     },
   );
 
+  /** Bo Menu */
+
   route.get(
     '/getmenu/:id',
     async (req: Request, res: Response, next: NextFunction) => {
@@ -176,4 +178,27 @@ export default (app: Router) => {
       }
     },
   );
+
+  /** Bo / Menu */
+
+  /** Bo Pages */
+
+  route.get(
+    '/pages-odata',
+    async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        const pathFileDraws = __dirname + '/../../public/ressources/boulle-bo/pages.json'
+
+        const rawdata: any[] = JSON.parse(fs.readFileSync(pathFileDraws));
+
+        return res.status(201).json({ __count: rawdata.length, results: rawdata });
+
+      } catch (e) {
+        return next(e);
+      }
+    },
+  );
+
+  /** / Bo Pages */
+
 };
