@@ -1,14 +1,1 @@
-[
-    {
-        "id": "0FEA36D5-B411-4D53-B9C1-EF7BAFF5AC6A",
-        "page": "Page édito",
-        "menuId": "627F5CFE-77E1-461C-A600-2643249A987E",
-        "menu": "Racine"
-    },
-    {
-        "id": "6E86DBE8-7493-4594-B00E-AFF5B1CAA573",
-        "page": "Page école",
-        "menuId": "71401FEF-A05B-4FF0-8361-C131E430C42C",
-        "menu": "Ferrari"
-    }
-]
+[{"id":"0FEA36D5-B411-4D53-B9C1-EF7BAFF5AC6A","pageName":"Page édito","menuId":"627F5CFE-77E1-461C-A600-2643249A987E","menu":"Racine"},{"id":"6E86DBE8-7493-4594-B00E-AFF5B1CAA573","pageName":"Page école","menuId":"71401FEF-A05B-4FF0-8361-C131E430C42C","menu":"Ferrari"}]

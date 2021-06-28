@@ -88,7 +88,7 @@ export default (app: Router) => {
         const { label, linkTo } = req.body
         let menuEntries: any[] = []
 
-        Logger.debug(`ajout d'une nouvelle entrée de menu...`);
+        Logger.debug(`ajout d'une entrée de menu...`);
 
         let pathFile = __dirname + '/../../public/ressources/boulle-bo/menu.json'
 
@@ -126,7 +126,7 @@ export default (app: Router) => {
 
         let pathFile = __dirname + '/../../public/ressources/boulle-bo/menu.json'
 
-        Logger.debug(`édition d'une nouvelle entrée de menu...`);
+        Logger.debug(`édition d'une entrée de menu...`);
 
         let rawdata = fs.readFileSync(pathFile);
 
@@ -155,7 +155,7 @@ export default (app: Router) => {
 
         let pathFile = __dirname + '/../../public/ressources/boulle-bo/menu.json'
 
-        Logger.debug(`suppression des nouvelles entrées de menu...`);
+        Logger.debug(`suppression d'une entrée de menu...`);
 
         let rawdata = fs.readFileSync(pathFile);
 
@@ -192,6 +192,124 @@ export default (app: Router) => {
         const rawdata: any[] = JSON.parse(fs.readFileSync(pathFileDraws));
 
         return res.status(201).json({ __count: rawdata.length, results: rawdata });
+
+      } catch (e) {
+        return next(e);
+      }
+    },
+  );
+
+  route.post(
+    '/addpage',
+    async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        const { pageName, menuId } = req.body
+        let pages: any[] = []
+
+        Logger.debug(`ajout d'une nouvelle page...`);
+
+        let pathFile = __dirname + '/../../public/ressources/boulle-bo/pages.json'
+
+        if (!fs.existsSync(pathFile)) {
+          fs.writeFileSync(pathFile, '[]');
+        } else {
+          let datas = fs.readFileSync(pathFile);
+
+          pages = JSON.parse(datas);
+        }
+
+        const helperServiceInstance = Container.get(HelperService);
+
+        pages.push({ id: helperServiceInstance.generateGuid(), pageName: pageName, menuId: menuId, menu: '??' })
+
+        fs.writeFileSync(pathFile, JSON.stringify(pages));
+
+        let rawdata = fs.readFileSync(pathFile);
+
+        return res.status(201).json(JSON.parse(rawdata));
+
+      } catch (e) {
+        return next(e);
+      }
+    },
+  );
+
+  route.get(
+    '/getpage/:id',
+    async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        const id = req.params.id;
+
+        let pathFile = __dirname + '/../../public/ressources/boulle-bo/pages.json'
+
+        let rawdata = fs.readFileSync(pathFile);
+
+        const datas: any[] = JSON.parse(rawdata)
+
+        const menu = datas.find((page: any) => page.id === id)
+
+        return res.status(201).json(menu);
+      } catch (e) {
+        return next(e);
+      }
+    },
+  );
+
+  route.post(
+    '/updatepage/:id',
+    async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        const { pageName, menuId } = req.body
+        const id = req.params.id;
+
+        let pathFile = __dirname + '/../../public/ressources/boulle-bo/pages.json'
+
+        Logger.debug(`édition d'une page...`);
+
+        let rawdata = fs.readFileSync(pathFile);
+
+        const datas: any[] = JSON.parse(rawdata)
+
+        const menuToUpdate = datas.find((menu: any) => menu.id === id)
+
+        menuToUpdate.pageName = pageName
+        menuToUpdate.menuId = menuId
+
+        fs.writeFileSync(pathFile, JSON.stringify(datas));
+
+        return res.status(201).json(true);
+
+      } catch (e) {
+        return next(e);
+      }
+    },
+  );
+
+  route.post(
+    '/deletepages',
+    async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        const idsMenus: string[] = req.body
+
+        let pathFile = __dirname + '/../../public/ressources/boulle-bo/pages.json'
+
+        Logger.debug(`suppression d'une page...`);
+
+        let rawdata = fs.readFileSync(pathFile);
+
+        const datas: any[] = JSON.parse(rawdata)
+
+        idsMenus.forEach((idMenu: string) => {
+          const indexToDelete: number = datas.findIndex((menuDatabase: any) => menuDatabase.id === idMenu)
+
+          if (indexToDelete !== -1) {
+            datas.splice(indexToDelete, 1)
+          }
+        })
+
+        fs.writeFileSync(pathFile, JSON.stringify(datas));
+
+        return res.status(201).json(true);
 
       } catch (e) {
         return next(e);
