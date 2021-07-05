@@ -1,12 +1,1 @@
-[
-    {
-        "id": "627F5CFE-77E1-461C-A600-2643249A987E",
-        "label": "Racine",
-        "linkTo": "/racine"
-    },
-    {
-        "id": "71401FEF-A05B-4FF0-8361-C131E430C42C",
-        "label": "Ferrari",
-        "linkTo": "/jpo/ferrari"
-    }
-]
+[{"id":"627F5CFE-77E1-461C-A600-2643249A987E","label":"Racine","linkTo":"/racine"},{"id":"71401FEF-A05B-4FF0-8361-C131E430C42C","label":"Ferrari","linkTo":"/jpo/ferrari"}]

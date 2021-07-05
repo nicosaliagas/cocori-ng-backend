@@ -203,7 +203,7 @@ export default (app: Router) => {
     '/addpage',
     async (req: Request, res: Response, next: NextFunction) => {
       try {
-        const { pageName, menuId } = req.body
+        const { pageName, menuId, pageCms } = req.body
         let pages: any[] = []
 
         Logger.debug(`ajout d'une nouvelle page...`);
@@ -220,7 +220,7 @@ export default (app: Router) => {
 
         const helperServiceInstance = Container.get(HelperService);
 
-        pages.push({ id: helperServiceInstance.generateGuid(), pageName: pageName, menuId: menuId, menu: '??' })
+        pages.push({ id: helperServiceInstance.generateGuid(), pageName: pageName, menuId: menuId, pageCms: JSON.stringify(pageCms), menu: '??' })
 
         fs.writeFileSync(pathFile, JSON.stringify(pages));
 
@@ -255,11 +255,32 @@ export default (app: Router) => {
     },
   );
 
+  route.get(
+    '/getpageByMenu/:menuid',
+    async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        const menuId = req.params.menuid;
+
+        let pathFile = __dirname + '/../../public/ressources/boulle-bo/pages.json'
+
+        let rawdata = fs.readFileSync(pathFile);
+
+        const datas: any[] = JSON.parse(rawdata)
+
+        const page = datas.find((page: any) => page.menuId === menuId)
+
+        return res.status(201).json(page);
+      } catch (e) {
+        return next(e);
+      }
+    },
+  );
+
   route.post(
     '/updatepage/:id',
     async (req: Request, res: Response, next: NextFunction) => {
       try {
-        const { pageName, menuId } = req.body
+        const { pageName, menuId, pageCms } = req.body
         const id = req.params.id;
 
         let pathFile = __dirname + '/../../public/ressources/boulle-bo/pages.json'
@@ -274,6 +295,7 @@ export default (app: Router) => {
 
         menuToUpdate.pageName = pageName
         menuToUpdate.menuId = menuId
+        menuToUpdate.pageCms = JSON.stringify(pageCms)
 
         fs.writeFileSync(pathFile, JSON.stringify(datas));
 
