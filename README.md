@@ -7,7 +7,7 @@
 - Se mettre à la racine du projet, là où se trouve le fichier ```package.json```
 - Lancer la commande ```npm i```
 - Démarrer le projet avec la commande et se mettre en écoute : ```npm run api```
-- URL de test, par exemple : ```https:\\localhost:8080\api\boulle-bo\hello-world```
+- URL de test, par exemple : ```https:\\localhost:8080\api\boulle-bo\hello-world``` => affiche ```{"message":"hello Boulle BO !"}```
 - Les points d'API disponibles pour les différents projets se trouvent dans le dossier : ~\src\api\routes
 
 #### `npm run build`

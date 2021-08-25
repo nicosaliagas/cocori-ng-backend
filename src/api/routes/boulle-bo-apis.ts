@@ -306,6 +306,35 @@ export default (app: Router) => {
       }
     },
   );
+  
+  route.post(
+    '/updateDesginPage/:id',
+    async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        const { designCmsPage } = req.body
+        const id = req.params.id;
+
+        let pathFile = __dirname + '/../../public/ressources/boulle-bo/pages.json'
+
+        Logger.debug(`édition d'une page...`);
+
+        let rawdata = fs.readFileSync(pathFile);
+
+        const datas: any[] = JSON.parse(rawdata)
+
+        const menuToUpdate = datas.find((menu: any) => menu.id === id)
+
+        menuToUpdate.pageCms = JSON.stringify(designCmsPage)
+
+        fs.writeFileSync(pathFile, JSON.stringify(datas));
+
+        return res.status(201).json(true);
+
+      } catch (e) {
+        return next(e);
+      }
+    },
+  );
 
   route.post(
     '/deletepages',
