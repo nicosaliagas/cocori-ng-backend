@@ -220,13 +220,15 @@ export default (app: Router) => {
 
         const helperServiceInstance = Container.get(HelperService);
 
-        pages.push({ id: helperServiceInstance.generateGuid(), pageName: pageName, menuId: menuId, pageCms: JSON.stringify(pageCms), menu: '??' })
+        const newIdPage: string = helperServiceInstance.generateGuid()
+
+        pages.push({ id: newIdPage, pageName: pageName, menuId: menuId, pageCms: JSON.stringify(pageCms), menu: '??' })
 
         fs.writeFileSync(pathFile, JSON.stringify(pages));
 
         let rawdata = fs.readFileSync(pathFile);
 
-        return res.status(201).json(JSON.parse(rawdata));
+        return res.status(201).json(newIdPage);
 
       } catch (e) {
         return next(e);
@@ -277,10 +279,10 @@ export default (app: Router) => {
   );
 
   route.post(
-    '/updatepage/:id',
+    '/updatePageInformations/:id',
     async (req: Request, res: Response, next: NextFunction) => {
       try {
-        const { pageName, menuId, pageCms } = req.body
+        const { pageName, menuId } = req.body
         const id = req.params.id;
 
         let pathFile = __dirname + '/../../public/ressources/boulle-bo/pages.json'
@@ -295,7 +297,6 @@ export default (app: Router) => {
 
         menuToUpdate.pageName = pageName
         menuToUpdate.menuId = menuId
-        menuToUpdate.pageCms = JSON.stringify(pageCms)
 
         fs.writeFileSync(pathFile, JSON.stringify(datas));
 
@@ -308,7 +309,7 @@ export default (app: Router) => {
   );
   
   route.post(
-    '/updateDesginPage/:id',
+    '/updateDesignPage/:id',
     async (req: Request, res: Response, next: NextFunction) => {
       try {
         const { designCmsPage } = req.body
@@ -316,7 +317,7 @@ export default (app: Router) => {
 
         let pathFile = __dirname + '/../../public/ressources/boulle-bo/pages.json'
 
-        Logger.debug(`édition d'une page...`);
+        Logger.debug(`save design de la page cms...`);
 
         let rawdata = fs.readFileSync(pathFile);
 
