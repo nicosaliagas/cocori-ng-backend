@@ -87,7 +87,7 @@ export default (app: Router) => {
 
         console.log(req)
 
-        Logger.debug(`patching the file... checksum: ${checksum}`);
+        Logger.debug(`patching the file... checksum: ${checksum} - fileId: ${fileId}`);
 
         pathFolderPart = `${pathFolderPublic}/${fileId}_parts`;
 

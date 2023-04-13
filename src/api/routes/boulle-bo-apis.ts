@@ -73,7 +73,7 @@ export default (app: Router) => {
 
         const rawdata: any[] = JSON.parse(fs.readFileSync(pathFileDraws));
 
-        return res.status(201).json({ __count: rawdata.length, results: rawdata });
+        return res.status(201).json({d: { __count: rawdata.length, results: rawdata }});
 
       } catch (e) {
         return next(e);
@@ -191,7 +191,7 @@ export default (app: Router) => {
 
         const rawdata: any[] = JSON.parse(fs.readFileSync(pathFileDraws));
 
-        return res.status(201).json({ __count: rawdata.length, results: rawdata });
+        return res.status(201).json({d: { __count: rawdata.length, results: rawdata }});
 
       } catch (e) {
         return next(e);
